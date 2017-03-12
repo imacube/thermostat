@@ -2,7 +2,6 @@
 #include <Wire.h>
 #include <Adafruit_RGBLCDShield.h>
 #include <utility/Adafruit_MCP23017.h>
-#include <stdint.h>
 #include <thermostat.h>
 
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
