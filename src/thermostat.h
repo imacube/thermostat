@@ -1,4 +1,8 @@
-#include <inttypes.h>
+#ifndef Thermostat_h
+#define Thermostat_h
+
+#include <Arduino.h>
+#include <Adafruit_RGBLCDShield.h>
 
 // LCD Colors
 #define RED 0x1
@@ -35,3 +39,30 @@ void lcd_display_temp_setting(bool);
 void get_temp();
 void lcd_blank_portion(uint8_t, uint8_t, uint8_t);
 uint8_t lcd_default_display_menu();
+
+class Thermostat {
+public:
+  Thermostat();
+  void init(uint8_t cols, uint8_t rows);
+
+  void clear_lcd();
+  void display_home();
+  void lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number);
+  void set_backlight();
+  void set_temp(uint8_t temp);
+  void set_temp_setting(uint8_t temp_setting);
+
+  void test();
+
+private:
+  Adafruit_RGBLCDShield _lcd;
+  uint8_t _temp; // Current temperature
+  uint8_t _temp_setting; // Temperature setting
+  uint8_t _lcd_backlight_color; // LCD Backlight Color
+
+  uint8_t _degree[8]; // Degree Symbol
+  uint8_t _smiley[8]; // Smiley Symbol
+  uint8_t _tongue[8]; // Smiley Symbol
+};
+
+#endif
