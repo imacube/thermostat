@@ -47,18 +47,45 @@ private:
 
   uint8_t _current_display; // Current display the Thermostat screen should show
   uint8_t _lcd_backlight_color; // LCD Backlight Color
+  uint8_t _previous_temp; // Previous temperature
   uint8_t _temp; // Current temperature
+  uint8_t _previous_temp_setting; // Previous Temperature setting
   uint8_t _temp_setting; // Temperature setting
+
+  uint8_t _refresh; // Is this a fresh menu, e.g. refresh display
 
   // HVAC Settings
   uint8_t _fan_mode; // Auto or On?
   uint8_t _fan_state; // On or Off?
-  uint8_t _ac; // On or Off?
+  uint8_t _cool; // On or Off?
   uint8_t _heat; // On or Off?
+
+  const static uint8_t _current_menu_item_count = 3;
+  const String current_menu_item[_current_menu_item_count] = {
+    "Cool/Heat",
+    "Fan",
+    "Exit"
+  };
+  const String fan_options[2] = {
+    "Auto",
+    "On"
+  };
+  const String hvac_options[_current_menu_item_count] = {
+    "Off",
+    "Cool",
+    "Heat"
+  };
+  const uint8_t selected_menu_count[_current_menu_item_count] = {
+    3,
+    2,
+    1
+  };
+
+  uint8_t _default_delay;
 
   uint8_t _degree[8]; // Degree Symbol
   uint8_t _smiley[8]; // Smiley Symbol
-  uint8_t _tongue[8]; // Smiley Symbol
+  uint8_t _right_arrow[8]; // Right pointie arrow symbol
 };
 
 #endif

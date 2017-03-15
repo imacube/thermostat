@@ -21,27 +21,31 @@ void setup(void) {
 }
 
 void loop(void) {
-  // turn the LED on (HIGH is the voltage level)
-  digitalWrite(LED_BUILTIN, HIGH);
-  // wait for a second
-  delay(500);
-  // turn the LED off by making the voltage LOW
-  digitalWrite(LED_BUILTIN, LOW);
-   // wait for a second
-  delay(500);
+  // // turn the LED on (HIGH is the voltage level)
+  // digitalWrite(LED_BUILTIN, HIGH);
+  // // wait for a second
+  // delay(500);
+  // // turn the LED off by making the voltage LOW
+  // digitalWrite(LED_BUILTIN, LOW);
+  //  // wait for a second
+  // delay(500);
 
   thermostat.yield();
 }
 
 Thermostat::Thermostat() {
   _temp_setting = 70;
+  _previous_temp_setting = _temp_setting;
   _lcd_backlight_color = WHITE;
   _current_display = DISPLAY_HOME;
+  _refresh = true;
 
   _fan_mode = OFF;
   _fan_state = OFF;
-  _ac = OFF;
+  _cool = OFF;
   _heat = OFF;
+
+  _default_delay = 100;
 
   // Set pixels for degree symbol
   _degree[0] = B01100;
@@ -60,6 +64,15 @@ Thermostat::Thermostat() {
   _smiley[4] = B10001;
   _smiley[5] = B01110;
   _smiley[6] = B00000;
+
+  // Set pixels for right arrow
+  _right_arrow[0] = B00000;
+  _right_arrow[1] = B00100;
+  _right_arrow[2] = B00010;
+  _right_arrow[3] = B11111;
+  _right_arrow[4] = B00010;
+  _right_arrow[5] = B00100;
+  _right_arrow[6] = B00000;
 }
 
 void Thermostat::init(uint8_t cols, uint8_t rows) {
@@ -67,40 +80,41 @@ void Thermostat::init(uint8_t cols, uint8_t rows) {
   _lcd.begin(cols, rows);
   _lcd.createChar(0, _degree);
   _lcd.createChar(1, _smiley);
+  _lcd.createChar(2, _right_arrow);
 }
 
-void Thermostat::buttons() {
-  /*
-  Read buttons being pressed
-  */
-
-  uint8_t buttons = _lcd.readButtons();
-
-  if (buttons) {
-    _lcd.clear();
-    _lcd.setCursor(0,0);
-    if (buttons & BUTTON_UP) {
-      _lcd.print("UP ");
-      _lcd.setBacklight(RED);
-    }
-    if (buttons & BUTTON_DOWN) {
-      _lcd.print("DOWN ");
-      _lcd.setBacklight(YELLOW);
-    }
-    if (buttons & BUTTON_LEFT) {
-      _lcd.print("LEFT ");
-      _lcd.setBacklight(GREEN);
-    }
-    if (buttons & BUTTON_RIGHT) {
-      _lcd.print("RIGHT ");
-      _lcd.setBacklight(TEAL);
-    }
-    if (buttons & BUTTON_SELECT) {
-      _lcd.print("SELECT ");
-      _lcd.setBacklight(VIOLET);
-    }
-  }
-}
+// void Thermostat::buttons() {
+//   /*
+//   Read buttons being pressed
+//   */
+//
+//   uint8_t buttons = _lcd.readButtons();
+//
+//   if (buttons) {
+//     _lcd.clear();
+//     _lcd.setCursor(0,0);
+//     if (buttons & BUTTON_UP) {
+//       _lcd.print("UP ");
+//       _lcd.setBacklight(RED);
+//     }
+//     if (buttons & BUTTON_DOWN) {
+//       _lcd.print("DOWN ");
+//       _lcd.setBacklight(YELLOW);
+//     }
+//     if (buttons & BUTTON_LEFT) {
+//       _lcd.print("LEFT ");
+//       _lcd.setBacklight(GREEN);
+//     }
+//     if (buttons & BUTTON_RIGHT) {
+//       _lcd.print("RIGHT ");
+//       _lcd.setBacklight(TEAL);
+//     }
+//     if (buttons & BUTTON_SELECT) {
+//       _lcd.print("SELECT ");
+//       _lcd.setBacklight(VIOLET);
+//     }
+//   }
+// }
 
 void Thermostat::clear_lcd() {
   /*
@@ -116,23 +130,30 @@ void Thermostat::display_home() {
   Display home screen
   */
 
-  clear_lcd();
-  _lcd.print(F("Temp: "));
-  _lcd.print(_temp);
-  _lcd.write(byte(0));
-  _lcd.print(F("F"));
-  _lcd.setCursor(0, 1);
-  _lcd.print(F("Setting: "));
-  _lcd.print(_temp_setting);
-  _lcd.write(byte(0));
-  _lcd.print(F("F"));
-  set_backlight();
+  if (_refresh or _previous_temp != _temp or _previous_temp_setting != _temp_setting) {
+    _refresh = false;
+    _previous_temp = _temp;
+    _previous_temp_setting = _temp_setting;
+
+    clear_lcd();
+    _lcd.print(F("Temp: "));
+    _lcd.print(_temp);
+    _lcd.write(byte(0));
+    _lcd.print(F("F"));
+    _lcd.setCursor(0, 1);
+    _lcd.print(F("Setting: "));
+    _lcd.print(_temp_setting);
+    _lcd.write(byte(0));
+    _lcd.print(F("F"));
+    set_backlight();
+  }
 
   if (_lcd.readButtons()) {
     // Load Menu
     _lcd.setBacklight(YELLOW);
     clear_lcd();
   }
+  delay(_default_delay);
 }
 
 void Thermostat::set_backlight() {
@@ -160,15 +181,77 @@ void Thermostat::display_menu() {
   Display menu options
   */
 
-  _lcd.setBacklight(VIOLET);
-  _lcd.print(F("Menu:"));
+  static int8_t selected_menu_item = 0;
+  static int8_t selected_item = 0;
+
+  if (_refresh) {
+    _refresh = false;
+    clear_lcd();
+    _lcd.setBacklight(VIOLET);
+    _lcd.print(F("Menu: "));
+    _lcd.print(current_menu_item[selected_menu_item]);
+    _lcd.setCursor(0, 1);
+    for (uint8_t i = 0; i < selected_menu_count[selected_menu_item]; i++) {
+      _lcd.print(F(" "));
+
+      if (selected_item == i) {
+        _lcd.write(byte(2));
+      }
+      if (selected_menu_item == 0) {
+        _lcd.print(hvac_options[i]);
+      }
+      else if (selected_menu_item == 1) {
+        _lcd.print(fan_options[i]);
+      }
+      else {
+        _lcd.print(F("Exit?"));
+      }
+    }
+  }
+
+  uint8_t buttons = _lcd.readButtons();
+  if (buttons) {
+    _refresh = true;
+    if (buttons & BUTTON_UP) {
+      selected_menu_item += 1;
+    }
+    else if (buttons & BUTTON_DOWN) {
+      selected_menu_item -= 1;
+    }
+    else if (buttons & BUTTON_SELECT) {
+      if (selected_menu_item == 2) { // Exit item
+        _current_display = DISPLAY_HOME;
+        _refresh = true;
+      }
+    }
+    else if (buttons & BUTTON_RIGHT) {
+      selected_item += 1;
+    }
+    else if (buttons & BUTTON_LEFT) {
+      selected_item -= 1;
+    }
+    if (selected_item > selected_menu_count[selected_menu_item] - 1) {
+      selected_item = 0;
+    }
+    else if (selected_item < 0) {
+      selected_item = selected_menu_count[selected_menu_item] - 1;
+    }
+
+    if (selected_menu_item > _current_menu_item_count - 1) {
+      selected_menu_item = 0;
+    }
+    else if (selected_menu_item < 0) {
+      selected_menu_item = _current_menu_item_count - 1;
+    }
+  }
+  delay(_default_delay);
 }
 
 void Thermostat::set_temp(uint8_t temp) {
   /*
   Set the current temperature
   */
-
+  _previous_temp = _temp;
   _temp = temp;
 }
 
@@ -204,13 +287,12 @@ void Thermostat::yield() {
   if (_current_display == DISPLAY_HOME) {
     if (_lcd.readButtons()) {
       _current_display = DISPLAY_MENU;
-      clear_lcd();
-      display_menu();
-      return;
+      _refresh = true;
     }
     display_home();
   }
   else if (_current_display == DISPLAY_MENU) {
     display_menu();
   }
+
 }
