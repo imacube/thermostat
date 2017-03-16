@@ -342,9 +342,10 @@ void Thermostat::yield() {
   if (_current_display == DISPLAY_HOME) {
     if (_lcd.readButtons()) {
       _current_display = DISPLAY_MENU;
-      _refresh = true;
+      _refresh = 1;
+    } else {
+      display_home();
     }
-    display_home();
   }
   else if (_current_display == DISPLAY_MENU) {
     display_menu();
