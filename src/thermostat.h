@@ -16,6 +16,8 @@
 
 #define OFF 0x00
 #define ON 0x1
+#define FAN_AUTO 0x0
+#define FAN_ON 0x1
 
 // Display
 #define ERROR_DISPLAY 0x1
@@ -33,8 +35,14 @@ public:
   void clear_lcd(); // Clear the LCD
   void display_home(); // Display the home screen (temperature and setting)
   void display_menu(); // Display menu options
+  void fan_auto();
+  void fan_on();
   void get_display(); // Return what display Thermostat is on
   void lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number); // Erase a portion of the LCD
+  void off_heat();
+  void off_cool();
+  void on_heat();
+  void on_cool();
   void set_backlight(); // Set the backlight color
   void set_temp(uint8_t temp); // Set the current temperature
   void set_temp_setting(uint8_t temp_setting); // Set the temperature setting
@@ -60,20 +68,31 @@ private:
   uint8_t _cool; // On or Off?
   uint8_t _heat; // On or Off?
 
+  struct _hvac_options_struct {
+    String setting_name;
+    uint8_t value;
+  };
+
+  const String _heat_text = "Heat";
+  const String _cool_text = "Cool";
+  const String _off_text = "Off";
+  const String _fan_auto_text = "Auto";
+  const String _fan_on_text = "On";
+
   const static uint8_t _current_menu_item_count = 3;
   const String current_menu_item[_current_menu_item_count] = {
     "Cool/Heat",
     "Fan",
     "Exit"
   };
-  const String fan_options[2] = {
-    "Auto",
-    "On"
+  const String _fan_options[2] = {
+    _fan_auto_text,
+    _fan_on_text
   };
-  const String hvac_options[_current_menu_item_count] = {
-    "Off",
-    "Cool",
-    "Heat"
+  const String _hvac_options[_current_menu_item_count] = {
+    _cool_text,
+    _off_text,
+    _heat_text
   };
   const uint8_t selected_menu_count[_current_menu_item_count] = {
     3,

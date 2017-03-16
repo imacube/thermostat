@@ -83,42 +83,9 @@ void Thermostat::init(uint8_t cols, uint8_t rows) {
   _lcd.createChar(2, _right_arrow);
 }
 
-// void Thermostat::buttons() {
-//   /*
-//   Read buttons being pressed
-//   */
-//
-//   uint8_t buttons = _lcd.readButtons();
-//
-//   if (buttons) {
-//     _lcd.clear();
-//     _lcd.setCursor(0,0);
-//     if (buttons & BUTTON_UP) {
-//       _lcd.print("UP ");
-//       _lcd.setBacklight(RED);
-//     }
-//     if (buttons & BUTTON_DOWN) {
-//       _lcd.print("DOWN ");
-//       _lcd.setBacklight(YELLOW);
-//     }
-//     if (buttons & BUTTON_LEFT) {
-//       _lcd.print("LEFT ");
-//       _lcd.setBacklight(GREEN);
-//     }
-//     if (buttons & BUTTON_RIGHT) {
-//       _lcd.print("RIGHT ");
-//       _lcd.setBacklight(TEAL);
-//     }
-//     if (buttons & BUTTON_SELECT) {
-//       _lcd.print("SELECT ");
-//       _lcd.setBacklight(VIOLET);
-//     }
-//   }
-// }
-
 void Thermostat::clear_lcd() {
   /*
-  Clear the screen and reset the cursor
+  Clear the screen and reset the cgursor
   */
 
   _lcd.clear();
@@ -136,15 +103,41 @@ void Thermostat::display_home() {
     _previous_temp_setting = _temp_setting;
 
     clear_lcd();
-    _lcd.print(F("Temp: "));
+    _lcd.print(F("T: "));
     _lcd.print(_temp);
     _lcd.write(byte(0));
     _lcd.print(F("F"));
+    _lcd.print(F(" "));
+
+    if (_cool == ON and _heat == ON) {
+      _lcd.print(F("ERROR W/ HVAC"));
+      off_heat();
+      off_cool();
+    }
+    else if (_cool == ON) {
+      _lcd.print(_cool_text);
+    }
+    else if (_heat == ON) {
+      _lcd.print(_heat_text);
+    }
+    else {
+      _lcd.print(_off_text);
+    }
+
     _lcd.setCursor(0, 1);
-    _lcd.print(F("Setting: "));
+    _lcd.print(F("S: "));
     _lcd.print(_temp_setting);
     _lcd.write(byte(0));
     _lcd.print(F("F"));
+    _lcd.print(F(" "));
+
+    if (_fan_mode == FAN_AUTO) {
+      _lcd.print(F("Fan Auto"));
+    }
+    else if (_fan_mode == FAN_ON) {
+      _lcd.print(F("Fan On"));
+    }
+
     set_backlight();
   }
 
@@ -183,6 +176,8 @@ void Thermostat::display_menu() {
 
   static int8_t selected_menu_item = 0;
   static int8_t selected_item = 0;
+  const uint16_t select_delay = 2000;
+  const uint16_t select_error_delay = 30000;
 
   if (_refresh) {
     _refresh = false;
@@ -198,10 +193,10 @@ void Thermostat::display_menu() {
         _lcd.write(byte(2));
       }
       if (selected_menu_item == 0) {
-        _lcd.print(hvac_options[i]);
+        _lcd.print(_hvac_options[i]);
       }
       else if (selected_menu_item == 1) {
-        _lcd.print(fan_options[i]);
+        _lcd.print(_fan_options[i]);
       }
       else {
         _lcd.print(F("Exit?"));
@@ -219,9 +214,43 @@ void Thermostat::display_menu() {
       selected_menu_item -= 1;
     }
     else if (buttons & BUTTON_SELECT) {
+      _lcd.setBacklight(GREEN);
       if (selected_menu_item == 2) { // Exit item
         _current_display = DISPLAY_HOME;
         _refresh = true;
+      }
+      else if (selected_menu_item == 0) { // hvac options
+        if (_hvac_options[selected_item] == _cool_text) {
+          on_cool();
+        }
+        else if (_hvac_options[selected_item] == _off_text) {
+          off_heat();
+          off_cool();
+        }
+        else if (_hvac_options[selected_item] == _heat_text) {
+          on_heat();
+        }
+        else {
+          _lcd.setBacklight(RED);
+          delay(select_error_delay);
+        }
+        delay(select_delay);
+        _current_display = DISPLAY_HOME;
+      }
+      else if (selected_menu_item == 1) { // fan options
+        _lcd.setBacklight(GREEN);
+        if (_fan_options[selected_item] == _fan_auto_text) {
+          fan_auto();
+        }
+        else if (_fan_options[selected_item] == _fan_on_text) {
+          fan_on();
+        }
+        else {
+          _lcd.setBacklight(RED);
+          delay(select_error_delay);
+        }
+        delay(select_delay);
+        _current_display = DISPLAY_HOME;
       }
     }
     else if (buttons & BUTTON_RIGHT) {
@@ -245,6 +274,32 @@ void Thermostat::display_menu() {
     }
   }
   delay(_default_delay);
+}
+
+void Thermostat::on_heat() {
+  off_cool();
+  _heat = ON;
+}
+
+void Thermostat::on_cool() {
+  off_heat();
+  _cool = ON;
+}
+
+void Thermostat::off_heat() {
+  _heat = OFF;
+}
+
+void Thermostat::off_cool() {
+  _cool = OFF;
+}
+
+void Thermostat::fan_auto() {
+  _fan_mode = FAN_AUTO;
+}
+
+void Thermostat::fan_on() {
+  _fan_mode = FAN_ON;
 }
 
 void Thermostat::set_temp(uint8_t temp) {
