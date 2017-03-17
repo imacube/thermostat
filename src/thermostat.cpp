@@ -40,10 +40,10 @@ Thermostat::Thermostat() {
   _current_display = DISPLAY_HOME;
   _refresh = true;
 
-  _fan_mode = OFF;
+  _fan_mode = FAN_AUTO;
   _fan_state = OFF;
   _cool = OFF;
-  _heat = OFF;
+  _heat = ON;
 
   _default_delay = 100;
 
@@ -175,7 +175,7 @@ void Thermostat::display_menu() {
   */
 
   static int8_t selected_menu_item = 0;
-  static int8_t selected_item = 0;
+  static int8_t selected_item = -1;
   const uint16_t select_delay = 2000;
   const uint16_t select_error_delay = 30000;
 
@@ -186,16 +186,46 @@ void Thermostat::display_menu() {
     _lcd.print(F("Menu: "));
     _lcd.print(current_menu_item[selected_menu_item]);
     _lcd.setCursor(0, 1);
+
     for (uint8_t i = 0; i < selected_menu_count[selected_menu_item]; i++) {
+
       _lcd.print(F(" "));
 
-      if (selected_item == i) {
-        _lcd.write(byte(2));
-      }
-      if (selected_menu_item == 0) {
+      if (selected_menu_item == 0) { // Cool/Heat Menu
+        if (selected_item == -1) {
+          // Find which item is already chosen before continuing
+          if (_hvac_options[i] == _heat_text && _heat == ON) {
+            _lcd.write(byte(2));
+            selected_item = i;
+          }
+          else if (_hvac_options[i] == _cool_text && _cool == ON) {
+            _lcd.write(byte(2));
+            selected_item = i;
+          }
+          else if (_hvac_options[i] == _off_text && _heat == OFF && _cool == OFF) {
+            _lcd.write(byte(2));
+            selected_item = i;
+          }
+        }
+        else if (selected_item == i) {
+          _lcd.write(byte(2));
+        }
         _lcd.print(_hvac_options[i]);
       }
-      else if (selected_menu_item == 1) {
+      else if (selected_menu_item == 1) { // Fan Menu
+        if (selected_item == -1) {
+          if (_fan_options[i] == _fan_auto_text && _fan_mode == FAN_AUTO) {
+            _lcd.write(byte(2));
+            selected_item = i;
+          }
+          else if (_fan_options[i] == _fan_on_text && _fan_mode == FAN_ON) {
+            _lcd.write(byte(2));
+            selected_item = i;
+          }
+        }
+        else if (selected_item == i) {
+          _lcd.write(byte(2));
+        }
         _lcd.print(_fan_options[i]);
       }
       else {
@@ -208,18 +238,18 @@ void Thermostat::display_menu() {
   if (buttons) {
     _refresh = true;
     if (buttons & BUTTON_UP) {
-      selected_menu_item += 1;
+      selected_menu_item -= 1;
+      // selected_item = -1;
+      // return;
     }
     else if (buttons & BUTTON_DOWN) {
-      selected_menu_item -= 1;
+      selected_menu_item += 1;
+      // selected_item = -1;
+      // return;
     }
     else if (buttons & BUTTON_SELECT) {
       _lcd.setBacklight(GREEN);
-      if (selected_menu_item == 2) { // Exit item
-        _current_display = DISPLAY_HOME;
-        _refresh = true;
-      }
-      else if (selected_menu_item == 0) { // hvac options
+      if (selected_menu_item == 0) { // hvac options
         if (_hvac_options[selected_item] == _cool_text) {
           on_cool();
         }
@@ -234,8 +264,6 @@ void Thermostat::display_menu() {
           _lcd.setBacklight(RED);
           delay(select_error_delay);
         }
-        delay(select_delay);
-        _current_display = DISPLAY_HOME;
       }
       else if (selected_menu_item == 1) { // fan options
         _lcd.setBacklight(GREEN);
@@ -249,9 +277,13 @@ void Thermostat::display_menu() {
           _lcd.setBacklight(RED);
           delay(select_error_delay);
         }
-        delay(select_delay);
-        _current_display = DISPLAY_HOME;
       }
+      delay(select_delay);
+      _current_display = DISPLAY_HOME;
+      _refresh = true;
+      selected_item = -1;
+      selected_menu_item = 0;
+      return;
     }
     else if (buttons & BUTTON_RIGHT) {
       selected_item += 1;
@@ -259,6 +291,7 @@ void Thermostat::display_menu() {
     else if (buttons & BUTTON_LEFT) {
       selected_item -= 1;
     }
+
     if (selected_item > selected_menu_count[selected_menu_item] - 1) {
       selected_item = 0;
     }
@@ -306,6 +339,7 @@ void Thermostat::set_temp(uint8_t temp) {
   /*
   Set the current temperature
   */
+
   _previous_temp = _temp;
   _temp = temp;
 }

@@ -14,7 +14,7 @@
 #define TEAL 0x6
 #define WHITE 0x7
 
-#define OFF 0x00
+#define OFF 0x0
 #define ON 0x1
 #define FAN_AUTO 0x0
 #define FAN_ON 0x1
