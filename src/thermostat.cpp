@@ -240,24 +240,12 @@ void Thermostat::display_menu() {
   if (buttons) {
     _refresh = true;
     if (buttons & BUTTON_UP) {
-      selected_menu_item -= 1;
-      if (selected_menu_item > _current_menu_item_count - 1) {
-        selected_menu_item = 0;
-      }
-      else if (selected_menu_item < 0) {
-        selected_menu_item = _current_menu_item_count - 1;
-      }
+      selected_menu_item = selected_menu_item_math(selected_menu_item - 1);
       selected_item = -1;
       return;
     }
     else if (buttons & BUTTON_DOWN) {
-      selected_menu_item += 1;
-      if (selected_menu_item > _current_menu_item_count - 1) {
-        selected_menu_item = 0;
-      }
-      else if (selected_menu_item < 0) {
-        selected_menu_item = _current_menu_item_count - 1;
-      }
+      selected_menu_item = selected_menu_item_math(selected_menu_item + 1);
       selected_item = -1;
       return;
     }
@@ -313,12 +301,7 @@ void Thermostat::display_menu() {
       selected_item = selected_menu_count[selected_menu_item] - 1;
     }
 
-    if (selected_menu_item > _current_menu_item_count - 1) {
-      selected_menu_item = 0;
-    }
-    else if (selected_menu_item < 0) {
-      selected_menu_item = _current_menu_item_count - 1;
-    }
+    selected_menu_item = selected_menu_item_math(selected_menu_item);
   }
   delay(_default_delay);
 }
@@ -347,6 +330,16 @@ void Thermostat::fan_auto() {
 
 void Thermostat::fan_on() {
   _fan_mode = FAN_ON;
+}
+
+int8_t Thermostat::selected_menu_item_math(int8_t selected_menu_item) {
+  /*
+  This simple if logic is used multiple times so a function was made
+  */
+
+  if (selected_menu_item > _current_menu_item_count - 1) return 0;
+  else if (selected_menu_item < 0) return _current_menu_item_count - 1;
+  else return selected_menu_item;
 }
 
 void Thermostat::set_temp(uint8_t temp) {

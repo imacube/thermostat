@@ -53,6 +53,8 @@ public:
 private:
   Adafruit_RGBLCDShield _lcd;
 
+  int8_t selected_menu_item_math(int8_t selected_menu_item);
+
   uint8_t _current_display; // Current display the Thermostat screen should show
   uint8_t _lcd_backlight_color; // LCD Backlight Color
   uint8_t _previous_temp; // Previous temperature
