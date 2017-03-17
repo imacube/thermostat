@@ -149,12 +149,12 @@ void Thermostat::display_home() {
   delay(_default_delay);
 }
 
-void Thermostat::set_backlight() {
-  /*
-  Set backlight color
-  */
+void Thermostat::fan_auto() {
+  _fan_mode = FAN_AUTO;
+}
 
-  _lcd.setBacklight(TEAL);
+void Thermostat::fan_on() {
+  _fan_mode = FAN_ON;
 }
 
 void Thermostat::lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number) {
@@ -306,6 +306,14 @@ void Thermostat::display_menu() {
   delay(_default_delay);
 }
 
+void Thermostat::off_heat() {
+  _heat = OFF;
+}
+
+void Thermostat::off_cool() {
+  _cool = OFF;
+}
+
 void Thermostat::on_heat() {
   off_cool();
   _heat = ON;
@@ -316,22 +324,6 @@ void Thermostat::on_cool() {
   _cool = ON;
 }
 
-void Thermostat::off_heat() {
-  _heat = OFF;
-}
-
-void Thermostat::off_cool() {
-  _cool = OFF;
-}
-
-void Thermostat::fan_auto() {
-  _fan_mode = FAN_AUTO;
-}
-
-void Thermostat::fan_on() {
-  _fan_mode = FAN_ON;
-}
-
 int8_t Thermostat::selected_menu_item_math(int8_t selected_menu_item) {
   /*
   This simple if logic is used multiple times so a function was made
@@ -340,6 +332,14 @@ int8_t Thermostat::selected_menu_item_math(int8_t selected_menu_item) {
   if (selected_menu_item > _current_menu_item_count - 1) return 0;
   else if (selected_menu_item < 0) return _current_menu_item_count - 1;
   else return selected_menu_item;
+}
+
+void Thermostat::set_backlight() {
+  /*
+  Set backlight color
+  */
+
+  _lcd.setBacklight(TEAL);
 }
 
 void Thermostat::set_temp(uint8_t temp) {

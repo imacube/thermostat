@@ -65,10 +65,10 @@ private:
   uint8_t _refresh; // Is this a fresh menu, e.g. refresh display
 
   // HVAC Settings
+  uint8_t _heat; // On or Off?
+  uint8_t _cool; // On or Off?
   uint8_t _fan_mode; // Auto or On?
   uint8_t _fan_state; // On or Off?
-  uint8_t _cool; // On or Off?
-  uint8_t _heat; // On or Off?
 
   struct _hvac_options_struct {
     String setting_name;
