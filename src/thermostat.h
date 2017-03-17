@@ -70,11 +70,6 @@ private:
   uint8_t _fan_mode; // Auto or On?
   uint8_t _fan_state; // On or Off?
 
-  struct _hvac_options_struct {
-    String setting_name;
-    uint8_t value;
-  };
-
   const String _heat_text = "Heat";
   const String _cool_text = "Cool";
   const String _off_text = "Off";
