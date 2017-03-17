@@ -187,6 +187,8 @@ void Thermostat::display_menu() {
     _lcd.print(current_menu_item[selected_menu_item]);
     _lcd.setCursor(0, 1);
 
+    Serial.println(selected_menu_item);
+    Serial.println(selected_menu_count[selected_menu_item]);
     for (uint8_t i = 0; i < selected_menu_count[selected_menu_item]; i++) {
 
       _lcd.print(F(" "));
@@ -239,13 +241,25 @@ void Thermostat::display_menu() {
     _refresh = true;
     if (buttons & BUTTON_UP) {
       selected_menu_item -= 1;
-      // selected_item = -1;
-      // return;
+      if (selected_menu_item > _current_menu_item_count - 1) {
+        selected_menu_item = 0;
+      }
+      else if (selected_menu_item < 0) {
+        selected_menu_item = _current_menu_item_count - 1;
+      }
+      selected_item = -1;
+      return;
     }
     else if (buttons & BUTTON_DOWN) {
       selected_menu_item += 1;
-      // selected_item = -1;
-      // return;
+      if (selected_menu_item > _current_menu_item_count - 1) {
+        selected_menu_item = 0;
+      }
+      else if (selected_menu_item < 0) {
+        selected_menu_item = _current_menu_item_count - 1;
+      }
+      selected_item = -1;
+      return;
     }
     else if (buttons & BUTTON_SELECT) {
       _lcd.setBacklight(GREEN);
