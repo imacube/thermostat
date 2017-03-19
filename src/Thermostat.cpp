@@ -21,15 +21,6 @@ void setup(void) {
 }
 
 void loop(void) {
-  // // turn the LED on (HIGH is the voltage level)
-  // digitalWrite(LED_BUILTIN, HIGH);
-  // // wait for a second
-  // delay(500);
-  // // turn the LED off by making the voltage LOW
-  // digitalWrite(LED_BUILTIN, LOW);
-  //  // wait for a second
-  // delay(500);
-
   thermostat.yield();
 }
 
@@ -171,16 +162,19 @@ void Thermostat::lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number)
 
 void Thermostat::display_menu() {
   /*
-  Display menu options
+  Displays the menu options for different settings
   */
 
   static int8_t selected_menu_item = 0;
   static int8_t selected_item = -1;
   const uint16_t select_delay = 2000;
   const uint16_t select_error_delay = 30000;
+  static uint32_t exit_timer = 0;
 
   if (_refresh) {
     _refresh = false;
+    exit_timer = millis(); // Reset exit timer
+
     clear_lcd();
     _lcd.setBacklight(VIOLET);
     _lcd.print(F("Menu: "));
@@ -231,6 +225,18 @@ void Thermostat::display_menu() {
       else {
         _lcd.print(F("Exit?"));
       }
+    }
+  }
+  else {
+    if (millis() - exit_timer > 30000 || millis() < exit_timer) {
+      // Either more then 30 seconds have elapsed or the timer has rolled over
+      // so return to the normal display
+      delay(select_delay);
+      _current_display = DISPLAY_HOME;
+      _refresh = true;
+      selected_item = -1;
+      selected_menu_item = 0;
+      return;
     }
   }
 
