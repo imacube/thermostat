@@ -132,11 +132,6 @@ void Thermostat::display_home() {
     set_backlight();
   }
 
-  if (_lcd.readButtons()) {
-    // Load Menu
-    _lcd.setBacklight(YELLOW);
-    clear_lcd();
-  }
   delay(_default_delay);
 }
 
