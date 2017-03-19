@@ -162,7 +162,7 @@ void Thermostat::lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number)
 
 void Thermostat::display_menu() {
   /*
-  Display menu options
+  Displays the menu options for different settings
   */
 
   static int8_t selected_menu_item = 0;
