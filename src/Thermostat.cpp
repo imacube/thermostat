@@ -389,6 +389,9 @@ void Thermostat::yield() {
         _current_display = DISPLAY_MENU;
         _refresh = 1;
       }
+      else if (buttons & BUTTON_UP) set_temp_setting(_temp_setting + (uint8_t) 1);
+      else if (buttons & BUTTON_DOWN) set_temp_setting(_temp_setting - (uint8_t) 1);
+      delay(_default_delay);
     } else {
       display_home();
     }
