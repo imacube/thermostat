@@ -36,7 +36,7 @@ Thermostat::Thermostat() {
   _cool = OFF;
   _heat = ON;
 
-  _default_delay = 100;
+  _default_delay = 200;
 
   // Set pixels for degree symbol
   _degree[0] = B01100;
