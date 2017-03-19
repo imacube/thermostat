@@ -380,11 +380,15 @@ void Thermostat::yield() {
   /*
   Yield control to the Thermostat object
   */
+  uint8_t buttons = _lcd.readButtons();
 
   if (_current_display == DISPLAY_HOME) {
-    if (_lcd.readButtons()) {
-      _current_display = DISPLAY_MENU;
-      _refresh = 1;
+    buttons = _lcd.readButtons();
+    if (buttons) {
+      if (buttons & BUTTON_SELECT) {
+        _current_display = DISPLAY_MENU;
+        _refresh = 1;
+      }
     } else {
       display_home();
     }
