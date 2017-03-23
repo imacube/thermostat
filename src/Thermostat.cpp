@@ -114,27 +114,19 @@ void Thermostat::display_home() {
     else if (_cool == ON) {
       _lcd.print(_cool_text);
       if (_temp > _temp_setting) {
-        digitalWrite(RELAY_FAN, HIGH);
-        digitalWrite(RELAY_COOL, HIGH);
-        digitalWrite(RELAY_HEAT, LOW);
+        on_cool_relay();
       }
       else {
-        digitalWrite(RELAY_FAN, LOW);
-        digitalWrite(RELAY_COOL, LOW);
-        digitalWrite(RELAY_HEAT, LOW);
+        off_cool_relay();
       }
     }
     else if (_heat == ON) {
       _lcd.print(_heat_text);
       if (_temp < _temp_setting) {
-        digitalWrite(RELAY_FAN, HIGH);
-        digitalWrite(RELAY_COOL, LOW);
-        digitalWrite(RELAY_HEAT, HIGH);
+        on_heat_relay();
       }
       else {
-        digitalWrite(RELAY_FAN, LOW);
-        digitalWrite(RELAY_COOL, LOW);
-        digitalWrite(RELAY_HEAT, LOW);
+        off_heat_relay();
       }
     }
     else {
@@ -432,4 +424,28 @@ void Thermostat::yield() {
     display_menu();
   }
 
+}
+
+void Thermostat::on_cool_relay() {
+  digitalWrite(RELAY_FAN, HIGH);
+  digitalWrite(RELAY_COOL, HIGH);
+  digitalWrite(RELAY_HEAT, LOW);
+}
+
+void Thermostat::off_cool_relay() {
+  if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, LOW);
+}
+
+void Thermostat::on_heat_relay() {
+  digitalWrite(RELAY_FAN, HIGH);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, HIGH);
+}
+
+void Thermostat::off_heat_relay() {
+  if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, LOW);
 }
