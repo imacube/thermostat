@@ -130,9 +130,8 @@ void Thermostat::display_home() {
       }
     }
     else {
-      digitalWrite(RELAY_FAN, LOW);
-      digitalWrite(RELAY_COOL, LOW);
-      digitalWrite(RELAY_HEAT, LOW);
+      off_heat_relay();
+      off_cool_relay();
     }
 
     _lcd.setCursor(0, 1);
