@@ -26,6 +26,11 @@
 #define HEATER_AC_DISPLAY 0x4
 #define FAN_DISPLAY 0x5
 
+// Relays
+#define RELAY_FAN 5
+#define RELAY_COOL 4
+#define RELAY_HEAT 6
+
 class Thermostat {
 public:
   Thermostat();
@@ -39,14 +44,20 @@ public:
   void fan_on();
   void get_display(); // Return what display Thermostat is on
   void lcd_blank_portion(uint8_t column, uint8_t line, uint8_t number); // Erase a portion of the LCD
-  void off_heat();
-  void off_cool();
-  void on_heat();
-  void on_cool();
   void set_backlight(); // Set the backlight color
   void set_temp(uint8_t temp); // Set the current temperature
   void set_temp_setting(uint8_t temp_setting); // Set the temperature setting
   void yield(); // Yield control the to Thermostat object
+
+  void off_cool();
+  void off_heat();
+  void on_cool();
+  void on_heat();
+
+  void on_cool_relay();
+  void off_cool_relay();
+  void on_heat_relay();
+  void off_heat_relay();
 
   void test();
 

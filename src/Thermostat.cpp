@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <OneWire.h>
 #include <Wire.h>
 #include <Adafruit_RGBLCDShield.h>
@@ -15,7 +16,12 @@ void setup(void) {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  thermostat.set_temp((uint8_t) 87);
+  pinMode(RELAY_FAN, OUTPUT);
+  pinMode(RELAY_COOL, OUTPUT);
+  pinMode(RELAY_HEAT, OUTPUT);
+
+  thermostat.on_heat();
+  thermostat.set_temp((uint8_t) 69);
   thermostat.display_home();
 
 }
@@ -34,7 +40,7 @@ Thermostat::Thermostat() {
   _fan_mode = FAN_AUTO;
   _fan_state = OFF;
   _cool = OFF;
-  _heat = ON;
+  _heat = OFF;
 
   _default_delay = 200;
 
@@ -100,19 +106,32 @@ void Thermostat::display_home() {
     _lcd.print(F("F"));
     _lcd.print(F(" "));
 
-    if (_cool == ON and _heat == ON) {
+    if (_cool == ON && _heat == ON) {
       _lcd.print(F("ERROR W/ HVAC"));
       off_heat();
       off_cool();
     }
     else if (_cool == ON) {
       _lcd.print(_cool_text);
+      if (_temp > _temp_setting) {
+        on_cool_relay();
+      }
+      else {
+        off_cool_relay();
+      }
     }
     else if (_heat == ON) {
       _lcd.print(_heat_text);
+      if (_temp < _temp_setting) {
+        on_heat_relay();
+      }
+      else {
+        off_heat_relay();
+      }
     }
     else {
-      _lcd.print(_off_text);
+      off_heat_relay();
+      off_cool_relay();
     }
 
     _lcd.setCursor(0, 1);
@@ -309,20 +328,24 @@ void Thermostat::display_menu() {
 
 void Thermostat::off_heat() {
   _heat = OFF;
+  if (_fan_mode == FAN_AUTO) _fan_state = OFF;
 }
 
 void Thermostat::off_cool() {
   _cool = OFF;
+  if (_fan_mode == FAN_AUTO) _fan_state = OFF;
 }
 
 void Thermostat::on_heat() {
   off_cool();
   _heat = ON;
+  _fan_state = ON;
 }
 
 void Thermostat::on_cool() {
   off_heat();
   _cool = ON;
+  _fan_state = ON;
 }
 
 int8_t Thermostat::selected_menu_item_math(int8_t selected_menu_item) {
@@ -400,4 +423,40 @@ void Thermostat::yield() {
     display_menu();
   }
 
+}
+
+void Thermostat::on_cool_relay() {
+  /*
+    Turn on Cool
+  */
+  digitalWrite(RELAY_FAN, HIGH);
+  digitalWrite(RELAY_COOL, HIGH);
+  digitalWrite(RELAY_HEAT, LOW);
+}
+
+void Thermostat::off_cool_relay() {
+  /*
+    Turn off Cool
+  */
+  if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, LOW);
+}
+
+void Thermostat::on_heat_relay() {
+  /*
+    Turn on Heat
+  */
+  digitalWrite(RELAY_FAN, HIGH);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, HIGH);
+}
+
+void Thermostat::off_heat_relay() {
+  /*
+    Turn off Heat
+  */
+  if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
+  digitalWrite(RELAY_COOL, LOW);
+  digitalWrite(RELAY_HEAT, LOW);
 }
