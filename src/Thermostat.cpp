@@ -426,24 +426,36 @@ void Thermostat::yield() {
 }
 
 void Thermostat::on_cool_relay() {
+  /*
+    Turn on Cool
+  */
   digitalWrite(RELAY_FAN, HIGH);
   digitalWrite(RELAY_COOL, HIGH);
   digitalWrite(RELAY_HEAT, LOW);
 }
 
 void Thermostat::off_cool_relay() {
+  /*
+    Turn off Cool
+  */
   if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
   digitalWrite(RELAY_COOL, LOW);
   digitalWrite(RELAY_HEAT, LOW);
 }
 
 void Thermostat::on_heat_relay() {
+  /*
+    Turn on Heat
+  */
   digitalWrite(RELAY_FAN, HIGH);
   digitalWrite(RELAY_COOL, LOW);
   digitalWrite(RELAY_HEAT, HIGH);
 }
 
 void Thermostat::off_heat_relay() {
+  /*
+    Turn off Heat
+  */
   if (_fan_mode == FAN_AUTO) digitalWrite(RELAY_FAN, LOW);
   digitalWrite(RELAY_COOL, LOW);
   digitalWrite(RELAY_HEAT, LOW);
