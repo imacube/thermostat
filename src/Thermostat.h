@@ -26,6 +26,11 @@
 #define HEATER_AC_DISPLAY 0x4
 #define FAN_DISPLAY 0x5
 
+// Relays
+#define RELAY_FAN 5
+#define RELAY_COOL 4
+#define RELAY_HEAT 6
+
 class Thermostat {
 public:
   Thermostat();
