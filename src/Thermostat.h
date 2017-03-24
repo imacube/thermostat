@@ -54,6 +54,8 @@ public:
   void on_cool();
   void on_heat();
 
+  void on_fan_relay();
+  void off_fan_relay();
   void on_cool_relay();
   void off_cool_relay();
   void on_heat_relay();

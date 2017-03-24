@@ -20,7 +20,6 @@ void setup(void) {
   pinMode(RELAY_COOL, OUTPUT);
   pinMode(RELAY_HEAT, OUTPUT);
 
-  thermostat.on_heat();
   thermostat.set_temp((uint8_t) 69);
   thermostat.display_home();
 
@@ -146,6 +145,7 @@ void Thermostat::display_home() {
     }
     else if (_fan_mode == FAN_ON) {
       _lcd.print(F("Fan On"));
+      on_fan_relay();
     }
 
     set_backlight();
@@ -288,7 +288,6 @@ void Thermostat::display_menu() {
         }
       }
       else if (selected_menu_item == 1) { // fan options
-        _lcd.setBacklight(GREEN);
         if (_fan_options[selected_item] == _fan_auto_text) {
           fan_auto();
         }
@@ -423,6 +422,20 @@ void Thermostat::yield() {
     display_menu();
   }
 
+}
+
+void Thermostat::on_fan_relay() {
+  /*
+    Turn on FAN
+  */
+  digitalWrite(RELAY_FAN, HIGH);
+}
+
+void Thermostat::off_fan_relay() {
+  /*
+    Turn off Fan
+  */
+  digitalWrite(RELAY_FAN, LOW);
 }
 
 void Thermostat::on_cool_relay() {
