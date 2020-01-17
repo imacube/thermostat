@@ -257,19 +257,19 @@ void Thermostat::display_menu() {
   uint8_t buttons = _lcd.readButtons();
   if (buttons) {
     _refresh = true;
-    if (buttons & BUTTON_UP) {
+    if ((buttons & BUTTON_UP) == BUTTON_UP) {
       selected_menu_item = selected_menu_item_math(selected_menu_item - 1);
       selected_item = -1;
       delay(_default_delay);
       return;
     }
-    else if (buttons & BUTTON_DOWN) {
+    else if ((buttons & BUTTON_DOWN) == BUTTON_DOWN) {
       selected_menu_item = selected_menu_item_math(selected_menu_item + 1);
       selected_item = -1;
       delay(_default_delay);
       return;
     }
-    else if (buttons & BUTTON_SELECT) {
+    else if ((buttons & BUTTON_SELECT) == BUTTON_SELECT) {
       _lcd.setBacklight(GREEN);
       if (selected_menu_item == 0) { // hvac options
         if (_hvac_options[selected_item] == _cool_text) {
@@ -306,10 +306,10 @@ void Thermostat::display_menu() {
       selected_menu_item = 0;
       return;
     }
-    else if (buttons & BUTTON_RIGHT) {
+    else if ((buttons & BUTTON_RIGHT) == BUTTON_RIGHT) {
       selected_item += 1;
     }
-    else if (buttons & BUTTON_LEFT) {
+    else if ((buttons & BUTTON_LEFT) == BUTTON_LEFT) {
       selected_item -= 1;
     }
 
@@ -407,12 +407,12 @@ void Thermostat::yield() {
   if (_current_display == DISPLAY_HOME) {
     buttons = _lcd.readButtons();
     if (buttons) {
-      if (buttons & BUTTON_SELECT) {
+      if (((buttons & BUTTON_SELECT) == BUTTON_SELECT)) {
         _current_display = DISPLAY_MENU;
         _refresh = 1;
       }
-      else if (buttons & BUTTON_UP) set_temp_setting(_temp_setting + (uint8_t) 1);
-      else if (buttons & BUTTON_DOWN) set_temp_setting(_temp_setting - (uint8_t) 1);
+      else if (buttons & BUTTON_UP) == BUTTON_UP) set_temp_setting(_temp_setting + (uint8_t) 1);
+      else if (buttons & BUTTON_DOWN) == BUTTON_DOWN) set_temp_setting(_temp_setting - (uint8_t) 1);
       delay(_default_delay);
     } else {
       display_home();
