@@ -1,3 +1,6 @@
+Update the commit history.
+
+```shell script
 git filter-branch --env-filter '
 
 OLD_EMAIL="imacube@gmail.com"
@@ -15,3 +18,12 @@ then
     export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
 fi
 ' --tag-name-filter cat -- --branches --tags
+```
+
+Push the changes.
+
+```shell script
+git push --force --tags origin 'refs/heads/*'
+```
+
+Source: https://help.github.com/en/github/using-git/changing-author-info
