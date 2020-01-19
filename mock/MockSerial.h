@@ -1,12 +1,17 @@
+#ifndef MockSerial_h
+#define MockSerial_h
+
 #include <cstdint>
 #include <iostream>
 #include <string>
 
-class Serial {
+class MockSerial {
 public:
   void begin(unsigned int);
   void end();
   size_t write(std::string);
 };
 
-extern Serial Serial;
+extern MockSerial Serial;
+
+#endif

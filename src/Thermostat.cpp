@@ -44,6 +44,9 @@ Thermostat::Thermostat() {
 
   _default_delay = 200;
 
+  #ifdef mock
+
+  #else
   // Set pixels for degree symbol
   _degree[0] = B01100;
   _degree[1] = B10010;
@@ -70,6 +73,7 @@ Thermostat::Thermostat() {
   _right_arrow[4] = B00010;
   _right_arrow[5] = B00100;
   _right_arrow[6] = B00000;
+  #endif
 }
 
 void Thermostat::init(uint8_t cols, uint8_t rows) {
@@ -412,8 +416,8 @@ void Thermostat::yield() {
         _current_display = DISPLAY_MENU;
         _refresh = 1;
       }
-      else if (buttons & BUTTON_UP) == BUTTON_UP) set_temp_setting(_temp_setting + (uint8_t) 1);
-      else if (buttons & BUTTON_DOWN) == BUTTON_DOWN) set_temp_setting(_temp_setting - (uint8_t) 1);
+      else if ((buttons & BUTTON_UP) == BUTTON_UP) set_temp_setting(_temp_setting + (uint8_t) 1);
+      else if ((buttons & BUTTON_DOWN) == BUTTON_DOWN) set_temp_setting(_temp_setting - (uint8_t) 1);
       delay(_default_delay);
     } else {
       display_home();
