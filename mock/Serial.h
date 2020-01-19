@@ -8,3 +8,5 @@ public:
   void end();
   size_t write(std::string);
 };
+
+extern Serial Serial;
