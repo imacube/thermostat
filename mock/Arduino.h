@@ -2,6 +2,7 @@
 #define Arduino_h
 
 #include <string>
+#include <MockSerial.h>
 
 // typedef unsigned char uint8_t;
 // typedef char int8_t;
@@ -16,11 +17,11 @@
 
 typedef std::string String;
 
+String F(String);
+uint8_t byte(uint8_t);
+void delay(uint32_t);
+void digitalWrite(uint8_t, uint8_t);
 unsigned long millis();
 void pinMode(uint8_t, uint8_t);
-String F(String);
-void delay(uint32_t);
-uint8_t byte(uint8_t);
-void digitalWrite(uint8_t, uint8_t);
 
 #endif

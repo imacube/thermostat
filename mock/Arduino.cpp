@@ -1,5 +1,17 @@
 #include "Arduino.h"
 
+String F(String msg) {
+    return msg;
+}
+
+uint8_t byte(uint8_t int_to_byte) {
+  return int_to_byte;
+}
+
+void delay(uint32_t ms) {
+  printf("Asked to delay %d\n", ms);
+}
+
 unsigned long millis() {
   unsigned char f;
   f = 0b111;
