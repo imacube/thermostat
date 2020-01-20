@@ -16,6 +16,7 @@ CPPFLAGS += -Iinclude -Wall
 DEP = $(OBJ:.o=.d)
 
 all: $(EXE)
+	./test
 
 -include $(DEP)
 

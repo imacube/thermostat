@@ -1,16 +1,22 @@
 #include <iostream>
 
-#include <Arduino.h>
+// #include <Arduino.h>
 
 // #include "add.h"
-// #include "Thermostat.h"
+#include "Thermostat.h"
+
+using std::cout;
 
 int main() {
-  std::cout << "hello world!\n";
-  std::cout << millis();
-  Serial.begin(9600);
-  Serial.write("Foobar\n");
-  // std::cout << add(1, 2) << "\n";
-  delay((uint8_t) 123);
+  cout << "\nBegin Test Output\n";
+
+  Thermostat thermostat = Thermostat();
+
+  thermostat.set_temp_setting(72);
+  thermostat.set_temp(72);
+
+  printf("%d\n", thermostat.get_temp());
+
+  cout << "End Test Output\n";
   return 0;
 }

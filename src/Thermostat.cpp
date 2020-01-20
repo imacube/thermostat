@@ -478,3 +478,11 @@ void Thermostat::off_heat_relay() {
   digitalWrite(RELAY_COOL, LOW);
   digitalWrite(RELAY_HEAT, LOW);
 }
+
+uint8_t Thermostat::get_temp() {
+  /*
+    Return the temperature.
+  */
+
+  return _temp;
+}
