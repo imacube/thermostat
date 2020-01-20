@@ -4,10 +4,6 @@
 #include <string>
 #include <MockSerial.h>
 
-// typedef unsigned char uint8_t;
-// typedef char int8_t;
-// typedef unsigned char boolean;
-
 #define mock
 
 #define LED_BUILTIN 13

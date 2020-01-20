@@ -3,7 +3,7 @@
 
 #include <string>
 
-typedef std::string String;
+#include <Arduino.h>
 
 #define BUTTON_UP     0b00001
 #define BUTTON_DOWN   0b00010

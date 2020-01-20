@@ -1,22 +1,32 @@
-.PHONY: clean
+EXE = test
 
-SOURCES := $(wildcard src/*.cpp)
-# SOURCES := src/test.cpp src/add.cpp
-OBJECTS := $(subst .cpp,.o, $(SOURCES))
+SRC_DIR = src
+OBJ_DIR = obj
 
-LIBRARY_SOURCES := $(wildcard mock/*.cpp) $(wildcard mock/utility/*.cpp)
-LIBRARY_OBJECTS := $(subst .cpp,.o, $(LIBRARY_SOURCES))
+SRC = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/utility/*.cpp)
+OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-test: $(LIBRARY_OBJECTS) $(OBJECTS)
-	$(CXX) $(LIBRARY_OBJECTS) -o $@ $(OBJECTS)
+CPPFLAGS += -Iinclude -Wall
+# CFLAGS += -Wall
+# LDFLAGS += -Llib
+# LDLIBS += -lm
 
-mock/%.o: mock/%.cpp
-	$(COMPILE.cpp) -I mock -o $@ $<
+.PHONY: all clean
 
-src/%.o: src/%.cpp
-	# $(COMPILE.cpp) -Wno-c++11-extensions -I mock -o $@ $<
-	$(COMPILE.cpp) -fmax-errors=5 -I mock -o $@ $<
+DEP = $(OBJ:.o=.d)
 
+all: $(EXE)
+
+-include $(DEP)
+
+$(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
+	$(CXX) $(CPPFLAGS) $< -MM -MT $(@:.d=.o) >$@
+
+$(EXE): $(OBJ)
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 clean:
-	-rm test $(LIBRARY_OBJECTS) $(OBJECTS)
+	$(RM) $(OBJ) $(DEP) $(EXE)
