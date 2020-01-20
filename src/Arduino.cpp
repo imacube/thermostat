@@ -13,8 +13,6 @@ void delay(uint32_t ms) {
 }
 
 unsigned long millis() {
-  unsigned char f;
-  f = 0b111;
   return 0;
 }
 
