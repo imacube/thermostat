@@ -468,6 +468,7 @@ void Thermostat::on_heat_relay() {
   digitalWrite(RELAY_FAN, HIGH);
   digitalWrite(RELAY_COOL, LOW);
   digitalWrite(RELAY_HEAT, HIGH);
+  printf("Parent function\n");
 }
 
 void Thermostat::off_heat_relay() {
@@ -485,4 +486,20 @@ uint8_t Thermostat::get_temp() {
   */
 
   return _temp;
+}
+
+uint8_t Thermostat::get_cool() {
+  /*
+    Return cool relay state.
+  */
+
+  return _cool;
+}
+
+uint8_t Thermostat::get_heat() {
+  /*
+    Return heat relay state.
+  */
+
+  return _heat;
 }

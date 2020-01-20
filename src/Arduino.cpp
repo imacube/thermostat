@@ -9,7 +9,7 @@ uint8_t byte(uint8_t int_to_byte) {
 }
 
 void delay(uint32_t ms) {
-  printf("Asked to delay %d\n", ms);
+  // printf("Asked to delay %d ms\n", ms);
 }
 
 unsigned long millis() {

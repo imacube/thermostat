@@ -50,6 +50,8 @@ public:
   void yield(); // Yield control the to Thermostat object
 
   uint8_t get_temp();
+  uint8_t get_cool();
+  uint8_t get_heat();
 
   void off_cool();
   void off_heat();
@@ -58,10 +60,10 @@ public:
 
   void on_fan_relay();
   void off_fan_relay();
-  void on_cool_relay();
-  void off_cool_relay();
-  void on_heat_relay();
-  void off_heat_relay();
+  virtual void on_cool_relay();
+  virtual void off_cool_relay();
+  virtual void on_heat_relay();
+  virtual void off_heat_relay();
 
   void test();
 
