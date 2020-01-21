@@ -7,14 +7,15 @@ int main() {
 
   thermostat.set_temp_setting(72);
   thermostat.set_temp(71);
+  thermostat.off_cool();
   thermostat.on_heat();
   display_state(thermostat);
 
   thermostat.display_home();
   display_state(thermostat);
 
-  thermostat.off_heat();
   thermostat.on_cool();
+  thermostat.off_heat();
   thermostat.set_temp_setting(80);
   thermostat.display_home();
   display_state(thermostat);
@@ -30,6 +31,7 @@ int main() {
 void display_state(TestThermostat thermostat) {
   cout << "\nDisplay State\n";
 
+  printf("millis\t\t\t%d\n", millis());
   printf("Set Temp\t\t%d\n", thermostat.get_set_temp());
   printf("Temp\t\t\t%d\n", thermostat.get_temp());
   printf("Heat\t\t\t%d\n", thermostat.get_heat());
@@ -38,6 +40,28 @@ void display_state(TestThermostat thermostat) {
   printf("Cool relay state\t%d\n", cool_relay_state);
   printf("Fan relay state\t\t%d\n", fan_relay_state);
   cout << "\n";
+}
+
+void TestThermostat::off_cool_relay() {
+  cout << "Cool Relay Off\n";
+  Thermostat::off_cool_relay();
+}
+void TestThermostat::on_cool_relay() {
+  cout << "Cool Relay On\n";
+  Thermostat::on_cool_relay();
+}
+void TestThermostat::off_heat_relay() {
+  cout << "Heat Relay Off\n";
+  Thermostat::off_heat_relay();
+}
+void TestThermostat::on_heat_relay() {
+  cout << "Heat Relay On\n";
+  Thermostat::on_heat_relay();
+}
+
+void TestThermostat::display_home() {
+  cout << "Calling display home\n";
+  Thermostat::display_home();
 }
 
 void digitalWrite(uint8_t pin, uint8_t value) {
@@ -65,26 +89,4 @@ void digitalWrite(uint8_t pin, uint8_t value) {
       fan_relay_state = 0;
     }
   }
-}
-
-void TestThermostat::off_cool_relay() {
-  cout << "Cool Relay Off\n";
-  Thermostat::off_cool_relay();
-}
-void TestThermostat::on_cool_relay() {
-  cout << "Cool Relay On\n";
-  Thermostat::on_cool_relay();
-}
-void TestThermostat::off_heat_relay() {
-  cout << "Heat Relay Off\n";
-  Thermostat::off_heat_relay();
-}
-void TestThermostat::on_heat_relay() {
-  cout << "Heat Relay On\n";
-  Thermostat::on_heat_relay();
-}
-
-void TestThermostat::display_home() {
-  cout << "Calling display home\n";
-  Thermostat::display_home();
 }
