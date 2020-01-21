@@ -13,6 +13,7 @@ int main() {
   thermostat.display_home();
   display_state(thermostat);
 
+  thermostat.off_heat();
   thermostat.on_cool();
   thermostat.set_temp_setting(80);
   thermostat.display_home();
