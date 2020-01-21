@@ -165,7 +165,7 @@ void Thermostat::display_home() {
       fan_relay(false);
     }
   }
-  else if (_heat == ON) {
+  else if ((_heat == ON) || (_cool == ON && _heat_relay == ON)) {
     if (_temp < _temp_setting) {
       if (_heat_relay == ON || millis() - _run_stop >= MIN_STOP_TIME) {
         heat_relay(true);

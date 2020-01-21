@@ -10,23 +10,22 @@ int main() {
   thermostat.off_cool();
   thermostat.on_heat();
   display_state(thermostat);
-
   thermostat.display_home();
   display_state(thermostat);
+
+  cout << "Switching to cool\n";
 
   thermostat.on_cool();
   thermostat.off_heat();
   thermostat.set_temp_setting(80);
+  thermostat.display_home();
+  display_state(thermostat);
+
   set_millis(610000);
   thermostat.display_home();
   display_state(thermostat);
 
-  thermostat.set_temp(80);
-  set_millis(610000);
-  thermostat.display_home();
-  display_state(thermostat);
-
-  thermostat.set_temp(82);
+  thermostat.set_temp(81);
   thermostat.display_home();
   display_state(thermostat);
 
