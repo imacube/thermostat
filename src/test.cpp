@@ -17,6 +17,12 @@ int main() {
   thermostat.on_cool();
   thermostat.off_heat();
   thermostat.set_temp_setting(80);
+  set_millis(610000);
+  thermostat.display_home();
+  display_state(thermostat);
+
+  thermostat.set_temp(80);
+  set_millis(610000);
   thermostat.display_home();
   display_state(thermostat);
 
@@ -74,7 +80,7 @@ void TestThermostat::display_home() {
 
 void digitalWrite(uint8_t pin, uint8_t value) {
   if (pin == RELAY_HEAT) {
-    if (value == HIGH) {
+    if (value == LOW) {
       heat_relay_state = 1;
     }
     else {
@@ -82,7 +88,7 @@ void digitalWrite(uint8_t pin, uint8_t value) {
     }
   }
   else if (pin == RELAY_COOL_1 || pin == RELAY_COOL_2) {
-    if (value == HIGH) {
+    if (value == LOW) {
       cool_relay_state = 1;
     }
     else {
@@ -90,7 +96,7 @@ void digitalWrite(uint8_t pin, uint8_t value) {
     }
   }
   else if (pin == RELAY_FAN) {
-    if (value == HIGH) {
+    if (value == LOW) {
       fan_relay_state = 1;
     }
     else {

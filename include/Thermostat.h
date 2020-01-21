@@ -83,8 +83,8 @@ public:
   void on_heat();
 
   void fan_relay(boolean mode);
-  void cool_relay(boolean mode);
-  void heat_relay(boolean mode);
+  virtual void cool_relay(boolean mode);
+  virtual void heat_relay(boolean mode);
 
   void refresh();
 

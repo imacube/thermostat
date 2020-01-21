@@ -20,5 +20,6 @@ void delay(uint32_t);
 void digitalWrite(uint8_t, uint8_t);
 unsigned long millis();
 void pinMode(uint8_t, uint8_t);
+void set_millis(uint32_t);
 
 #endif

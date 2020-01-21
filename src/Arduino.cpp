@@ -19,3 +19,7 @@ unsigned long millis() {
 }
 
 void pinMode(uint8_t pin, uint8_t mode) {}
+
+void set_millis(uint32_t ms) {
+  arduino_current_millis = ms;
+}
