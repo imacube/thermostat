@@ -7,27 +7,56 @@
 
 using std::cout;
 
+uint8_t heat_relay_state = 0;
+uint8_t cool_relay_state = 0;
+uint8_t fan_relay_state = 0;
+
+void digitalWrite(uint8_t pin, uint8_t value) {
+  if (pin == RELAY_HEAT) {
+    if (value == HIGH) {
+      heat_relay_state = 1;
+    }
+    else {
+      heat_relay_state = 0;
+    }
+  }
+  else if (pin == RELAY_COOL) {
+    if (value == HIGH) {
+      cool_relay_state = 1;
+    }
+    else {
+      cool_relay_state = 0;
+    }
+  }
+  else if (pin == RELAY_FAN) {
+    if (value == HIGH) {
+      fan_relay_state = 1;
+    }
+    else {
+      fan_relay_state = 0;
+    }
+  }
+}
+
+
 class TestThermostat: public Thermostat
 {
   public:
-    uint8_t heat_relay_state = 0;
-    uint8_t cool_relay_state = 0;
-
     void off_cool_relay() {
-      cool_relay_state = 0;
       cout << "Cool Relay Off\n";
+      Thermostat::off_cool_relay();
     }
     void on_cool_relay() {
-      cool_relay_state = 1;
       cout << "Cool Relay On\n";
+      Thermostat::on_cool_relay();
     }
     void off_heat_relay() {
-      heat_relay_state = 0;
       cout << "Heat Relay Off\n";
+      Thermostat::off_heat_relay();
     }
     void on_heat_relay() {
-      heat_relay_state = 1;
       cout << "Heat Relay On\n";
+      Thermostat::on_heat_relay();
     }
 
     void display_home() {
@@ -52,7 +81,11 @@ int main() {
   display_state(thermostat);
 
   thermostat.on_cool();
-  thermostat.set_temp(80);
+  thermostat.set_temp_setting(80);
+  thermostat.display_home();
+  display_state(thermostat);
+
+  thermostat.set_temp(82);
   thermostat.display_home();
   display_state(thermostat);
 
@@ -62,10 +95,13 @@ int main() {
 
 void display_state(TestThermostat thermostat) {
   cout << "\nDisplay State\n";
+
+  printf("Set Temp\t\t%d\n", thermostat.get_set_temp());
   printf("Temp\t\t\t%d\n", thermostat.get_temp());
   printf("Heat\t\t\t%d\n", thermostat.get_heat());
   printf("Cool\t\t\t%d\n", thermostat.get_cool());
-  printf("Heat relay state\t%d\n", thermostat.heat_relay_state);
-  printf("Cool relay state\t%d\n", thermostat.cool_relay_state);
+  printf("Heat relay state\t%d\n", heat_relay_state);
+  printf("Cool relay state\t%d\n", cool_relay_state);
+  printf("Fan relay state\t\t%d\n", fan_relay_state);
   cout << "\n";
 }

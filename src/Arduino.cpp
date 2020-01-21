@@ -17,5 +17,3 @@ unsigned long millis() {
 }
 
 void pinMode(uint8_t pin, uint8_t mode) {}
-
-void digitalWrite(uint8_t pin, uint8_t state) {}

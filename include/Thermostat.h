@@ -49,6 +49,7 @@ public:
   void set_temp_setting(uint8_t temp_setting); // Set the temperature setting
   void yield(); // Yield control the to Thermostat object
 
+  uint8_t get_set_temp();
   uint8_t get_temp();
   uint8_t get_cool();
   uint8_t get_heat();
