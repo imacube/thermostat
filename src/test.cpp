@@ -1,71 +1,4 @@
-#include <iostream>
-
-// #include <Arduino.h>
-
-// #include "add.h"
-#include "Thermostat.h"
-
-using std::cout;
-
-uint8_t heat_relay_state = 0;
-uint8_t cool_relay_state = 0;
-uint8_t fan_relay_state = 0;
-
-void digitalWrite(uint8_t pin, uint8_t value) {
-  if (pin == RELAY_HEAT) {
-    if (value == HIGH) {
-      heat_relay_state = 1;
-    }
-    else {
-      heat_relay_state = 0;
-    }
-  }
-  else if (pin == RELAY_COOL) {
-    if (value == HIGH) {
-      cool_relay_state = 1;
-    }
-    else {
-      cool_relay_state = 0;
-    }
-  }
-  else if (pin == RELAY_FAN) {
-    if (value == HIGH) {
-      fan_relay_state = 1;
-    }
-    else {
-      fan_relay_state = 0;
-    }
-  }
-}
-
-
-class TestThermostat: public Thermostat
-{
-  public:
-    void off_cool_relay() {
-      cout << "Cool Relay Off\n";
-      Thermostat::off_cool_relay();
-    }
-    void on_cool_relay() {
-      cout << "Cool Relay On\n";
-      Thermostat::on_cool_relay();
-    }
-    void off_heat_relay() {
-      cout << "Heat Relay Off\n";
-      Thermostat::off_heat_relay();
-    }
-    void on_heat_relay() {
-      cout << "Heat Relay On\n";
-      Thermostat::on_heat_relay();
-    }
-
-    void display_home() {
-      cout << "Calling display home\n";
-      Thermostat::display_home();
-    }
-};
-
-void display_state(TestThermostat thermostat);
+#include "test.h"
 
 int main() {
   cout << "\nBegin Test Output\n\n";
@@ -104,4 +37,53 @@ void display_state(TestThermostat thermostat) {
   printf("Cool relay state\t%d\n", cool_relay_state);
   printf("Fan relay state\t\t%d\n", fan_relay_state);
   cout << "\n";
+}
+
+void digitalWrite(uint8_t pin, uint8_t value) {
+  if (pin == RELAY_HEAT) {
+    if (value == HIGH) {
+      heat_relay_state = 1;
+    }
+    else {
+      heat_relay_state = 0;
+    }
+  }
+  else if (pin == RELAY_COOL) {
+    if (value == HIGH) {
+      cool_relay_state = 1;
+    }
+    else {
+      cool_relay_state = 0;
+    }
+  }
+  else if (pin == RELAY_FAN) {
+    if (value == HIGH) {
+      fan_relay_state = 1;
+    }
+    else {
+      fan_relay_state = 0;
+    }
+  }
+}
+
+void TestThermostat::off_cool_relay() {
+  cout << "Cool Relay Off\n";
+  Thermostat::off_cool_relay();
+}
+void TestThermostat::on_cool_relay() {
+  cout << "Cool Relay On\n";
+  Thermostat::on_cool_relay();
+}
+void TestThermostat::off_heat_relay() {
+  cout << "Heat Relay Off\n";
+  Thermostat::off_heat_relay();
+}
+void TestThermostat::on_heat_relay() {
+  cout << "Heat Relay On\n";
+  Thermostat::on_heat_relay();
+}
+
+void TestThermostat::display_home() {
+  cout << "Calling display home\n";
+  Thermostat::display_home();
 }
