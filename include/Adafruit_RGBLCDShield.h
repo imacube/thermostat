@@ -18,6 +18,7 @@ public:
   void createChar(uint8_t, uint8_t[8]);
   void clear();
   void setCursor(uint8_t, uint8_t);
+  void scrollDisplayLeft();
   void print(String);
   void print(uint8_t);
   void write(uint8_t);

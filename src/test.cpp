@@ -31,7 +31,7 @@ int main() {
 void display_state(TestThermostat thermostat) {
   cout << "\nDisplay State\n";
 
-  printf("millis\t\t\t%d\n", millis());
+  printf("millis\t\t\t%lu\n", millis());
   printf("Set Temp\t\t%d\n", thermostat.get_set_temp());
   printf("Temp\t\t\t%d\n", thermostat.get_temp());
   printf("Heat\t\t\t%d\n", thermostat.get_heat());
@@ -42,21 +42,29 @@ void display_state(TestThermostat thermostat) {
   cout << "\n";
 }
 
-void TestThermostat::off_cool_relay() {
-  cout << "Cool Relay Off\n";
-  Thermostat::off_cool_relay();
+void TestThermostat::cool_relay(boolean mode) {
+  if (mode == false) {
+    cout << "Cool Relay Off\n";
+  }
+  else if (mode == true) {
+    cout << "Cool Relay On\n";
+  }
+  else {
+    cout << "Cool Relay mode " << mode << "\n";
+  }
+  Thermostat::cool_relay(mode);
 }
-void TestThermostat::on_cool_relay() {
-  cout << "Cool Relay On\n";
-  Thermostat::on_cool_relay();
-}
-void TestThermostat::off_heat_relay() {
-  cout << "Heat Relay Off\n";
-  Thermostat::off_heat_relay();
-}
-void TestThermostat::on_heat_relay() {
-  cout << "Heat Relay On\n";
-  Thermostat::on_heat_relay();
+void TestThermostat::heat_relay(boolean mode) {
+  if (mode == false) {
+    cout << "Heat Relay Off\n";
+  }
+  else if (mode == true) {
+    cout << "Heat Relay On\n";
+  }
+  else {
+    cout << "Heat Relay mode " << mode << "\n";
+  }
+  Thermostat::heat_relay(mode);
 }
 
 void TestThermostat::display_home() {
@@ -73,7 +81,7 @@ void digitalWrite(uint8_t pin, uint8_t value) {
       heat_relay_state = 0;
     }
   }
-  else if (pin == RELAY_COOL) {
+  else if (pin == RELAY_COOL_1 || pin == RELAY_COOL_2) {
     if (value == HIGH) {
       cool_relay_state = 1;
     }

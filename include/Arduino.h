@@ -12,6 +12,7 @@
 #define LOW 0b0
 
 typedef std::string String;
+typedef uint8_t boolean;
 
 String F(String);
 uint8_t byte(uint8_t);
