@@ -30,7 +30,10 @@ int main() {
   // display_state(thermostat);
 
   if (heat_relay_state == 1) {
-    cout << "FAIL: heat relay should not be on!\n";
+    cout << "\nFAIL: heat relay should not be on!\n";
+  }
+  else {
+    cout << "\nSUCCESS: no errors.\n";
   }
   cout << "\nEnd Test Output\n";
   return 0;
