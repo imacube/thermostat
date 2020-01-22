@@ -25,10 +25,13 @@ int main() {
   thermostat.display_home();
   display_state(thermostat);
 
-  thermostat.set_temp(81);
-  thermostat.display_home();
-  display_state(thermostat);
+  // thermostat.set_temp(81);
+  // thermostat.display_home();
+  // display_state(thermostat);
 
+  if (heat_relay_state == 1) {
+    cout << "FAIL: heat relay should not be on!\n";
+  }
   cout << "\nEnd Test Output\n";
   return 0;
 }
