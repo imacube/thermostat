@@ -190,6 +190,13 @@ void Thermostat::display_home() {
     cool_relay(false);
   }
 
+  if (_heat == OFF && _heat_relay == ON && millis() - _run_start > MIN_RUN_TIME_HEAT) {
+    heat_relay(false);
+  }
+  // if (_cool == OFF && _cool_relay == ON && millis() - _run_stop > MIN_RUN_TIME_COOL) {
+  //   cool_relay(false);
+  // }
+
   if (millis() - _idle < IDLE_TIMEOUT) {
     if (_heat == ON) {
       _lcd.setBacklight(RED);
