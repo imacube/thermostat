@@ -16,6 +16,7 @@ ARDUINO_CORE := arduino:avr
 ARDUINO_MODEL := uno
 ARDUINO_CLI := arduino-cli --config-file $(ARDUINO_CONFIG)
 ARDUINO_LIBRARIES := 'XBee-Arduino library'
+ARDUINO_LIBRARIES_PATH := Arduino/libraries
 
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 ifeq ($(uname_S),Darwin)
@@ -56,8 +57,17 @@ arduino-core-install:
 	$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || $(MAKE) arduino-core-update
 	$(ARDUINO_CLI) core install $(ARDUINO_CORE)
 
-arduino-lib-install:
+arduino-lib-install: $(ARDUINO_LIBRARIES_PATH)/XBeePayload
 	$(ARDUINO_CLI) lib install $(ARDUINO_LIBRARIES)
+
+$(ARDUINO_LIBRARIES_PATH)/XBeePayload:
+	curl -L -O https://github.com/imacube/XBeePayload/archive/master.zip
+	unzip -d $(ARDUINO_LIBRARIES_PATH) master.zip
+	mv $(ARDUINO_LIBRARIES_PATH)/XBeePayload-master $(ARDUINO_LIBRARIES_PATH)/XBeePayload
+	rm master.zip
+
+arduino-lib-clean:
+	rm -rf $(ARDUINO_LIBRARIES_PATH)
 
 arduino-compile: arduino-core-install arduino-lib-install
 	$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
