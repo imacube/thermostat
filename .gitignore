@@ -8,3 +8,5 @@ test
 
 .arduino
 Arduino/libraries
+*.elf
+*.hex
