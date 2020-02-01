@@ -11,11 +11,11 @@ CPPFLAGS += -Iinclude -Wall
 # LDFLAGS += -Llib
 # LDLIBS += -lm
 
-ARDUINO_CONFIG := ./arduino/arduino-cli.yaml
-# ARDUINO_CONFIG := ~/.arduino15/arduino-cli.yaml
+ARDUINO_CONFIG := ./.arduino/arduino-cli.yaml
 ARDUINO_CORE := arduino:avr
 ARDUINO_MODEL := uno
 ARDUINO_CLI := arduino-cli --config-file $(ARDUINO_CONFIG)
+ARDUINO_LIBRARIES := 'XBee-Arduino library'
 
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 ifeq ($(uname_S),Darwin)
@@ -56,5 +56,8 @@ arduino-core-install:
 	$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || $(MAKE) arduino-core-update
 	$(ARDUINO_CLI) core install $(ARDUINO_CORE)
 
-arduino-compile: arduino-core-install
+arduino-lib-install:
+	$(ARDUINO_CLI) lib install $(ARDUINO_LIBRARIES)
+
+arduino-compile: arduino-core-install arduino-lib-install
 	$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
