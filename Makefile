@@ -92,3 +92,8 @@ arduino-lib-clean:
 
 arduino-compile: arduino-core-install arduino-lib-install
 	$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
+
+arduino-clean:
+	-rm $(addprefix Arduino/Thermostat/,*.elf *.hex)
+
+arduino-clean-all: arduino-lib-clean arduino-clean
