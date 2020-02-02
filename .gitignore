@@ -5,3 +5,7 @@
 *.o
 *.d
 test
+
+.arduino
+*.elf
+*.hex
