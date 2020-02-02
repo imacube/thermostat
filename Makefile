@@ -15,10 +15,11 @@ ARDUINO_CONFIG := ./.arduino/arduino-cli.yaml
 ARDUINO_CORE := arduino:avr
 ARDUINO_MODEL := uno
 ARDUINO_CLI := $(HOME)/bin/arduino-cli --config-file $(ARDUINO_CONFIG)
-ARDUINO_LIBRARIES:= Arduino/libraries
-ARDUINO_LIBRARIES_INSTALL := XBee-Arduino_library OneWire
+ARDUINO_LIBRARIES := Arduino/libraries
+ARDUINO_LIBRARIES_INSTALL = XBee-Arduino_library OneWire
 ARDUINO_LIBRARIES_INSTALL := $(addprefix $(ARDUINO_LIBRARIES)/,$(ARDUINO_LIBRARIES_INSTALL))
 ARDUINO_LIBRARIES_DOWNLOAD := XBeePayload Thermostat Adafruit_RGBLCDShield Adafruit_SleepyDog
+ARDUINO_CORE_COUNT = $(shell $(ARDUINO_CLI) core list | grep -c $(ARDUINO_CORE) || true)
 
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 ifeq ($(uname_S),Darwin)
@@ -35,7 +36,7 @@ define download-lib
 	rm $@.zip
 endef
 
-.PHONY: all clean
+.PHONY: all clean arduino-compile arduino-clean arduino-core-install arduino-lib-install
 
 DEP = $(OBJ:.o=.d)
 
@@ -59,15 +60,11 @@ $(OBJ_DIR) $(OBJ_DIR)/utility:
 clean:
 	$(RM) $(OBJ) $(DEP) $(EXE)
 
-arduino-core-list:
-	$(ARDUINO_CLI) core list
-
-arduino-core-update:
-	$(ARDUINO_CLI) core update-index
-
 arduino-core-install:
-	@$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || \
-	($(MAKE) arduino-core-update && $(ARDUINO_CLI) core install $(ARDUINO_CORE))
+ifeq ($(ARDUINO_CORE_COUNT),0)
+	$(ARDUINO_CLI) core update-index
+	$(ARDUINO_CLI) core install $(ARDUINO_CORE)
+endif
 
 arduino-lib-install: $(ARDUINO_LIBRARIES_INSTALL) $(addprefix $(ARDUINO_LIBRARIES)/,$(ARDUINO_LIBRARIES_DOWNLOAD))
 
