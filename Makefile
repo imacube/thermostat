@@ -66,7 +66,7 @@ arduino-core-update:
 	$(ARDUINO_CLI) core update-index
 
 arduino-core-install:
-	$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || \
+	@$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || \
 	($(MAKE) arduino-core-update && $(ARDUINO_CLI) core install $(ARDUINO_CORE))
 
 arduino-lib-install: $(ARDUINO_LIBRARIES_INSTALL) $(addprefix $(ARDUINO_LIBRARIES)/,$(ARDUINO_LIBRARIES_DOWNLOAD))
@@ -88,7 +88,7 @@ $(ARDUINO_LIBRARIES)/Thermostat: $(SRC_DIR)/Thermostat.cpp include/Thermostat.h
 	cp $(SRC_DIR)/Thermostat.cpp include/Thermostat.h $(ARDUINO_LIBRARIES)/Thermostat
 
 arduino-compile: arduino-core-install arduino-lib-install
-	$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
+	@$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
 
 arduino-clean:
 	-rm $(addprefix Arduino/Thermostat/,*.elf *.hex)
