@@ -14,7 +14,7 @@ CPPFLAGS += -Iinclude -Wall
 ARDUINO_CONFIG := ./.arduino/arduino-cli.yaml
 ARDUINO_CORE := arduino:avr
 ARDUINO_MODEL := uno
-ARDUINO_CLI := arduino-cli --config-file $(ARDUINO_CONFIG)
+ARDUINO_CLI := $(HOME)/bin/arduino-cli --config-file $(ARDUINO_CONFIG)
 ARDUINO_LIBRARIES:= Arduino/libraries
 ARDUINO_LIBRARIES_INSTALL := XBee-Arduino_library OneWire
 ARDUINO_LIBRARIES_INSTALL := $(addprefix $(ARDUINO_LIBRARIES)/,$(ARDUINO_LIBRARIES_INSTALL))
@@ -87,13 +87,8 @@ $(ARDUINO_LIBRARIES)/Thermostat: $(SRC_DIR)/Thermostat.cpp include/Thermostat.h
 	mkdir $(ARDUINO_LIBRARIES)/Thermostat
 	cp $(SRC_DIR)/Thermostat.cpp include/Thermostat.h $(ARDUINO_LIBRARIES)/Thermostat
 
-arduino-lib-clean:
-	rm -rf $(ARDUINO_LIBRARIES)
-
 arduino-compile: arduino-core-install arduino-lib-install
 	$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
 
 arduino-clean:
 	-rm $(addprefix Arduino/Thermostat/,*.elf *.hex)
-
-arduino-clean-all: arduino-lib-clean arduino-clean
