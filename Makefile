@@ -66,8 +66,8 @@ arduino-core-update:
 	$(ARDUINO_CLI) core update-index
 
 arduino-core-install:
-	$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || $(MAKE) arduino-core-update
-	$(ARDUINO_CLI) core install $(ARDUINO_CORE)
+	$(MAKE) arduino-core-list | grep -q $(ARDUINO_CORE) || \
+	($(MAKE) arduino-core-update && $(ARDUINO_CLI) core install $(ARDUINO_CORE))
 
 arduino-lib-install: $(ARDUINO_LIBRARIES_INSTALL) $(addprefix $(ARDUINO_LIBRARIES)/,$(ARDUINO_LIBRARIES_DOWNLOAD))
 
