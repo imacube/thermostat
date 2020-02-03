@@ -1,6 +1,6 @@
 #include "test_heat_relay.h"
 
-void test_heat_relay() {
+uint8_t test_heat_relay() {
   reset_relay_state();
   TestThermostat thermostat = TestThermostat();
 
@@ -30,8 +30,9 @@ void test_heat_relay() {
 
   if (get_heat_relay_state() == 1) {
     cout << "\nFAIL: heat relay should not be on!\n";
+    return 1;
   }
-  else {
-    cout << "\nSUCCESS: no errors.\n";
-  }
+
+  cout << "\nSUCCESS: no errors.\n";
+  return 0;
 }

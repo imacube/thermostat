@@ -42,6 +42,7 @@ DEP = $(OBJ:.o=.d)
 
 all: $(EXE)
 	./test
+	$(MAKE) arduino-compile
 
 -include $(DEP)
 

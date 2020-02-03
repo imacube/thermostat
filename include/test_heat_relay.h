@@ -3,6 +3,6 @@
 
 #include "test_helpers.h"
 
-void test_heat_relay();
+uint8_t test_heat_relay();
 
 #endif
