@@ -6,6 +6,7 @@
 #include "Thermostat.h"
 
 using std::cout;
+using std::to_string;
 
 uint8_t get_heat_relay_state();
 uint8_t get_cool_relay_state();
@@ -18,8 +19,8 @@ class TestThermostat: public Thermostat
     void cool_relay(boolean);
     void heat_relay(boolean);
     void display_home();
+    void display_state();
+    String test_messages = "";
 };
-
-void display_state(TestThermostat);
 
 #endif

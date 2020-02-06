@@ -1,6 +1,8 @@
 #include "test_heat_relay.h"
 
 uint8_t test_heat_relay() {
+  String messages = "";
+
   reset_relay_state();
   TestThermostat thermostat = TestThermostat();
 
@@ -8,28 +10,30 @@ uint8_t test_heat_relay() {
   thermostat.set_temp(71);
   thermostat.off_cool();
   thermostat.on_heat();
-  display_state(thermostat);
-  thermostat.display_home();
-  display_state(thermostat);
+  thermostat.display_state();
 
-  cout << "Switching to cool\n";
+  thermostat.display_home();
+  thermostat.display_state();
+
+  thermostat.test_messages += "Switching to cool\n";
 
   thermostat.on_cool();
   thermostat.off_heat();
   thermostat.set_temp_setting(80);
   thermostat.display_home();
-  display_state(thermostat);
+  thermostat.display_state();
 
   set_millis(610000);
   thermostat.display_home();
-  display_state(thermostat);
+  thermostat.display_state();
 
   // thermostat.set_temp(81);
   // thermostat.display_home();
-  // display_state(thermostat);
+  // display_state(thermostat, messages);
 
   if (get_heat_relay_state() == 1) {
     cout << "\nFAIL: heat relay should not be on!\n";
+    cout << thermostat.test_messages;
     return 1;
   }
 

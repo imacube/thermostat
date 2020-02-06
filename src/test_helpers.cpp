@@ -24,45 +24,44 @@ void reset_relay_state() {
 
 void TestThermostat::cool_relay(boolean mode) {
   if (mode == false) {
-    cout << "Cool Relay Off\n";
+    test_messages += "Cool Relay Off\n";
   }
   else if (mode == true) {
-    cout << "Cool Relay On\n";
+    test_messages += "Cool Relay On\n";
   }
   else {
-    cout << "Cool Relay mode " << mode << "\n";
+    test_messages += "Cool Relay mode " + to_string(mode) + "\n";
   }
   Thermostat::cool_relay(mode);
 }
 void TestThermostat::heat_relay(boolean mode) {
   if (mode == false) {
-    cout << "Heat Relay Off\n";
+    test_messages += "Heat Relay Off\n";
   }
   else if (mode == true) {
-    cout << "Heat Relay On\n";
+    test_messages += "Heat Relay On\n";
   }
   else {
-    cout << "Heat Relay mode " << mode << "\n";
+    test_messages += "Heat Relay mode " + to_string(mode) + "\n";
   }
   Thermostat::heat_relay(mode);
 }
 void TestThermostat::display_home() {
-  cout << "Calling display home\n";
+  test_messages += "Calling display home\n";
   Thermostat::display_home();
 }
 
-void display_state(TestThermostat thermostat) {
-  cout << "\nDisplay State\n";
-
-  printf("millis\t\t\t%lu\n", millis());
-  printf("Set Temp\t\t%d\n", thermostat.get_set_temp());
-  printf("Temp\t\t\t%d\n", thermostat.get_temp());
-  printf("Heat\t\t\t%d\n", thermostat.get_heat());
-  printf("Cool\t\t\t%d\n", thermostat.get_cool());
-  printf("Heat relay state\t%d\n", thermostat._heat_relay);
-  printf("Cool relay state\t%d\n", thermostat._cool_relay);
-  printf("Fan relay state\t\t%d\n", thermostat._fan_relay);
-  cout << "\n";
+void TestThermostat::display_state() {
+  test_messages += "\nDisplay State\n";
+  test_messages += "millis\t\t\t" + to_string(millis()) + "\n";
+  test_messages += "Set Temp\t\t" + to_string(get_set_temp()) + "\n";
+  test_messages += "Temp\t\t\t" + to_string(get_temp()) + "\n";
+  test_messages += "Heat\t\t\t" + to_string(get_heat()) + "\n";
+  test_messages += "Cool\t\t\t" + to_string(get_cool()) + "\n";
+  test_messages += "Heat relay state\t" + to_string(_heat_relay) + "\n";
+  test_messages += "Cool relay state\t" + to_string(_cool_relay) + "\n";
+  test_messages += "Fan relay state\t\t" + to_string(_fan_relay) + "\n";
+  test_messages += "\n";
 }
 
 void digitalWrite(uint8_t pin, uint8_t value) {
