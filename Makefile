@@ -82,7 +82,7 @@ $(ARDUINO_LIBRARIES)/Adafruit_SleepyDog:
 	$(call download-lib,Adafruit_SleepyDog-1.2.0,https://github.com/imacube/Adafruit_SleepyDog/archive/1.2.0.zip)
 
 $(ARDUINO_LIBRARIES)/Thermostat: $(SRC_DIR)/Thermostat.cpp include/Thermostat.h
-	mkdir $(ARDUINO_LIBRARIES)/Thermostat
+	-mkdir $(ARDUINO_LIBRARIES)/Thermostat
 	cp $(SRC_DIR)/Thermostat.cpp include/Thermostat.h $(ARDUINO_LIBRARIES)/Thermostat
 
 arduino-compile: arduino-core-install arduino-lib-install
