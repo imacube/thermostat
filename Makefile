@@ -36,13 +36,13 @@ define download-lib
 	rm $@.zip
 endef
 
-.PHONY: all clean arduino-compile arduino-clean arduino-core-install arduino-lib-install
+.PHONY: all clean arduino-core-install arduino-lib-install thermostat remote thermostat-upload remote-upload
 
 DEP = $(OBJ:.o=.d)
 
 all: $(EXE)
 	./test
-	$(MAKE) arduino-compile
+	$(MAKE) arduino-compile-thermostat
 
 -include $(DEP)
 
@@ -59,7 +59,7 @@ $(OBJ_DIR) $(OBJ_DIR)/utility:
 	mkdir -p $@
 
 clean:
-	$(RM) $(OBJ) $(DEP) $(EXE)
+	$(RM) $(OBJ) $(DEP) $(EXE) $(addprefix Arduino/Thermostat/,*.elf *.hex)
 
 arduino-core-install:
 ifeq ($(ARDUINO_CORE_COUNT),0)
@@ -82,11 +82,20 @@ $(ARDUINO_LIBRARIES)/Adafruit_SleepyDog:
 	$(call download-lib,Adafruit_SleepyDog-1.2.0,https://github.com/imacube/Adafruit_SleepyDog/archive/1.2.0.zip)
 
 $(ARDUINO_LIBRARIES)/Thermostat: $(SRC_DIR)/Thermostat.cpp include/Thermostat.h
-	-mkdir $(ARDUINO_LIBRARIES)/Thermostat
+	mkdir -p $(ARDUINO_LIBRARIES)/Thermostat
 	cp $(SRC_DIR)/Thermostat.cpp include/Thermostat.h $(ARDUINO_LIBRARIES)/Thermostat
 
-arduino-compile: arduino-core-install arduino-lib-install
+thermostat: $(EXE) arduino-core-install arduino-lib-install
+	./$(EXE)
 	@$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
 
-arduino-clean:
-	-rm $(addprefix Arduino/Thermostat/,*.elf *.hex)
+remote: $(EXE) arduino-core-install arduino-lib-install
+	./$(EXE)
+	@$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat-Remote-Control
+
+thermostat-upload: $(EXE) thermostat
+	./$(EXE)
+	$(ARDUINO_CLI) upload -p /dev/ttyACM0 --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
+
+remote-upload: remote
+	$(ARDUINO_CLI) upload -p /dev/ttyACM0 --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat-Remote-Control
