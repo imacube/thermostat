@@ -1,7 +1,7 @@
 #include "test.h"
 
 int main() {
-  cout << "\nBegin Test Output\n\n";
+  cout << "\nBegin Test Output\n";
 
   uint8_t result = 0;
   std::set<int> results;
@@ -17,6 +17,6 @@ int main() {
     cout << "\nSUCCESS: no errors.\n";
   }
 
-  cout << "\nEnd Test Output\n";
+  cout << "\nEnd Test Output\n\n";
   return result;
 }
