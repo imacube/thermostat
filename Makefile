@@ -93,8 +93,7 @@ remote: $(EXE) arduino-core-install arduino-lib-install
 	./$(EXE)
 	@$(ARDUINO_CLI) compile --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat-Remote-Control
 
-thermostat-upload: $(EXE) thermostat
-	./$(EXE)
+thermostat-upload: thermostat
 	$(ARDUINO_CLI) upload -p /dev/ttyACM0 --fqbn $(ARDUINO_CORE):$(ARDUINO_MODEL) Arduino/Thermostat
 
 remote-upload: remote
