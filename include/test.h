@@ -2,6 +2,7 @@
 #define test_h
 
 #include <iostream>
+#include <set>
 
 using std::cout;
 
